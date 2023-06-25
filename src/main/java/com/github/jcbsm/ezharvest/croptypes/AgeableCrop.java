@@ -26,7 +26,7 @@ public class AgeableCrop implements Harvestable {
             // Check if the block data can be cast as ageable
             Ageable ageable = (Ageable) block.getBlockData();
 
-            // If so, return if it's at maxium age or not.
+            // If so, return if it's at maximum age or not.
             return ageable.getAge() == ageable.getMaximumAge();
         } catch (Exception e) {
             throw new IllegalArgumentException(String.format("Block %s does not have age", block));

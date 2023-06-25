@@ -1,0 +1,79 @@
+package com.github.jcbsm.ezharvest.util;
+
+import com.github.jcbsm.ezharvest.EzHarvest;
+import com.github.jcbsm.ezharvest.croptypes.Harvestable;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
+
+public class CropManager {
+
+    private final Map<Material, Harvestable> map = new HashMap<>();
+
+    /**
+     * Initialises the manager map
+     */
+    public void init() {
+
+        // Get services
+        ServiceLoader<Harvestable> loader = ServiceLoader.load(Harvestable.class, EzHarvest.class.getClassLoader());
+
+        // for each
+        for (Harvestable service: loader) {
+
+            // Get the annotation
+            var mapping = service.getClass().getAnnotation(Crops.class);
+
+            // If there is no annotation, error
+            if (mapping == null) {
+                System.out.println((String.format("Class '%s' didn't have HarvestMapping annotation.", service.getClass().getName())));
+                continue;
+            }
+
+            // Put values into the map
+            for (Material material : mapping.value()) {
+                map.put(material, service);
+            }
+        }
+    }
+
+    /**
+     * Small debug...
+     */
+    public void debug() {
+
+        System.out.println("Crop Map Size: " + map.size());
+        System.out.println("Entries: ");
+
+        for (Map.Entry<Material, Harvestable> entry : map.entrySet()) {
+            System.out.println("\t" + entry.getValue().getClass().getSimpleName() + ": " + entry.getKey());
+        }
+
+    }
+
+    /**
+     * Attempts to harvest a block
+     * @param player Player harvesting
+     * @param block Block to be harvested
+     * @return If the harvest was successful.
+     */
+    public boolean attemptHarvest(@NotNull Player player, @NotNull Block block) {
+
+        // Get Crop type
+        var crop = map.get(block.getType());
+
+        // Check if it is a crop, and if it's harvestable
+        if (crop == null || !crop.isHarvestable(block)) {
+            return false;
+        }
+
+        crop.harvest(player, block);
+        return true;
+
+    }
+}

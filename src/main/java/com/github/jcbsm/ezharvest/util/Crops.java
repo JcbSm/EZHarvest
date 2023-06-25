@@ -1,4 +1,4 @@
-package github.jcbsm.ezharvest.util;
+package com.github.jcbsm.ezharvest.util;
 
 import org.bukkit.Material;
 

@@ -1,7 +1,7 @@
-package github.jcbsm.ezharvest;
+package com.github.jcbsm.ezharvest;
 
-import github.jcbsm.ezharvest.listeners.PlayerInteractEventListener;
-import github.jcbsm.ezharvest.util.CropManager;
+import com.github.jcbsm.ezharvest.listeners.PlayerInteractEventListener;
+import com.github.jcbsm.ezharvest.util.CropManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class EzHarvest extends JavaPlugin {
@@ -14,6 +14,7 @@ public final class EzHarvest extends JavaPlugin {
 
         System.out.println("Initialising EZHarvest Crop Manager...");
         cropManager.init();
+        cropManager.debug();
 
         // Register listener
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
@@ -22,5 +23,13 @@ public final class EzHarvest extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static EzHarvest getPlugin() {
+        return getPlugin(EzHarvest.class);
+    }
+
+    public CropManager getCropManager() {
+        return cropManager;
     }
 }

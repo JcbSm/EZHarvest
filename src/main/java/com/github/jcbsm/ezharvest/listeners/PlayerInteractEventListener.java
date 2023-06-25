@@ -1,6 +1,6 @@
 package com.github.jcbsm.ezharvest.listeners;
 
-import com.github.jcbsm.ezharvest.EzHarvest;
+import com.github.jcbsm.ezharvest.EZHarvest;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -48,7 +48,7 @@ public class PlayerInteractEventListener implements Listener {
         )) return;
 
         // Harvest Crop
-        if (EzHarvest.getPlugin().getCropManager().attemptHarvest(player, block)) {
+        if (EZHarvest.getPlugin().getCropManager().attemptHarvest(player, block)) {
 
             // Play sound
             player.getWorld().playSound(block.getLocation(), Sound.BLOCK_CROP_BREAK, SoundCategory.BLOCKS, 1, 1);

@@ -1,6 +1,6 @@
 package com.github.jcbsm.ezharvest.util;
 
-import com.github.jcbsm.ezharvest.EzHarvest;
+import com.github.jcbsm.ezharvest.EZHarvest;
 import com.github.jcbsm.ezharvest.croptypes.Harvestable;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.logging.Logger;
 
 public class CropManager {
 
@@ -20,40 +21,33 @@ public class CropManager {
      */
     public void init() {
 
+        Logger logger = EZHarvest.getPlugin().getLogger();
+
+        logger.info("Initialising CropManger...");
+
         // Get services
-        ServiceLoader<Harvestable> loader = ServiceLoader.load(Harvestable.class, EzHarvest.class.getClassLoader());
+        ServiceLoader<Harvestable> loader = ServiceLoader.load(Harvestable.class, EZHarvest.class.getClassLoader());
 
         // for each
         for (Harvestable service: loader) {
+
+            logger.info(String.format("Mapping materials for %s", service.getClass().getSimpleName()));
 
             // Get the annotation
             var mapping = service.getClass().getAnnotation(Crops.class);
 
             // If there is no annotation, error
             if (mapping == null) {
-                System.out.println((String.format("Class '%s' didn't have HarvestMapping annotation.", service.getClass().getName())));
+                logger.warning((String.format("Class '%s' didn't have HarvestMapping annotation.", service.getClass().getSimpleName())));
                 continue;
             }
 
             // Put values into the map
             for (Material material : mapping.value()) {
+                logger.info(String.format("\tAdding %s", material));
                 map.put(material, service);
             }
         }
-    }
-
-    /**
-     * Small debug...
-     */
-    public void debug() {
-
-        System.out.println("Crop Map Size: " + map.size());
-        System.out.println("Entries: ");
-
-        for (Map.Entry<Material, Harvestable> entry : map.entrySet()) {
-            System.out.println("\t" + entry.getValue().getClass().getSimpleName() + ": " + entry.getKey());
-        }
-
     }
 
     /**

@@ -1,0 +1,5 @@
+name: EzHarvest
+version: '${version}'
+main: github.jcbsm.ezharvest.EzHarvest
+api-version: '1.19'
+load: POSTWORLD

@@ -63,6 +63,12 @@ public class PlayerInteractEventListener implements Listener {
 
             // Reduce durability
             damage(item);
+
+            // check if item is broken
+            if (((Damageable) player.getInventory().getItemInMainHand().getItemMeta()).getDamage() > player.getInventory().getItemInMainHand().getType().getMaxDurability()) {
+                player.getInventory().getItemInMainHand().setAmount(item.getAmount() - 1);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1, 1);
+            }
         }
     }
 
@@ -80,6 +86,8 @@ public class PlayerInteractEventListener implements Listener {
 
         // Set value back
         item.setItemMeta(meta);
+
+
     }
 
     /**
